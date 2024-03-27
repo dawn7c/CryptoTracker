@@ -14,10 +14,13 @@ namespace Domain.Models
 
         public async Task GetDataFromApi(string pair, int intervalSeconds)
         {
-            while (true)
-            {
-                try
+               try
                 {
+                    if (bitGetSocketClient != null)
+                    {
+                        await bitGetSocketClient.UnsubscribeAllAsync();
+                         bitGetSocketClient = null;
+                    }
                     bitGetSocketClient = new BitgetSocketClient();
                     var tickerSubscriptionResult = await bitGetSocketClient.SpotApi.SubscribeToTickerUpdatesAsync(pair, (update) =>
                     {
@@ -31,7 +34,7 @@ namespace Domain.Models
                 {
                     Console.WriteLine($"Error API: {ex.Message}");
                 }
-            }
+            
             
         }
 

@@ -1,4 +1,6 @@
 ﻿using Binance.Net.Clients;
+using Bitget.Net.Clients;
+using Bitget.Net.Interfaces.Clients;
 using Domain.Abstractions;
 
 namespace Domain.Models
@@ -12,25 +14,28 @@ namespace Domain.Models
         
         public async Task GetDataFromApi(string pair, int intervalSeconds)
         {
-            while (true)
+            try
             {
-                try
+                if (socketClient != null)
                 {
-                    socketClient = new BinanceSocketClient();
-                    
-                    var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync(pair, data =>
-                    {
-                        DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(data.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
-                        DataReceivedBinance?.Invoke(data.Data.Symbol, moscowTime, data.Data.LastPrice);
+                    await socketClient.UnsubscribeAllAsync();
+                    socketClient = null;
+                }
+                socketClient = new BinanceSocketClient();
+                var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync(pair, data =>
+                {
+                    DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(data.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+                    DataReceivedBinance?.Invoke(data.Data.Symbol, moscowTime, data.Data.LastPrice);
 
-                    });
-                    await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error API: {ex.Message}");
-                }
+                });
+
+                await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
             }
+            catch (Exception ex)
+            {
+              Console.WriteLine($"Error API: {ex.Message}");
+            }
+            
 
         }
 

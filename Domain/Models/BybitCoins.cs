@@ -1,5 +1,6 @@
 ﻿
 using Bybit.Net.Clients;
+using CryptoExchange.Net.Interfaces;
 using Domain.Abstractions;
 
 
@@ -15,10 +16,14 @@ namespace Domain.Models
 
         public async Task GetDataFromApi(string pair, int intervalSeconds)
         {
-            while (true)
+            try
             {
-                try
+                if (bybitSocketClient != null)
                 {
+                    bybitSocketClient.UnsubscribeAllAsync();
+                    bybitSocketClient = null;
+                }
+
                     bybitSocketClient = new BybitSocketClient();
 
                     var tickerSubscriptionResult = await bybitSocketClient.V5SpotApi.SubscribeToTickerUpdatesAsync(pair, (update) =>
@@ -27,12 +32,12 @@ namespace Domain.Models
                         DataReceivedBybit?.Invoke(update.Data.Symbol,moscowTime,update.Data.LastPrice);
                     });
                     await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error API: {ex.Message}");
-                }
             }
+             catch (Exception ex)
+            {
+              Console.WriteLine($"Error API: {ex.Message}");
+            }
+            
         }
 
         public void StopDataFetching()

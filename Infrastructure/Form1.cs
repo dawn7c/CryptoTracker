@@ -33,7 +33,43 @@ namespace Infrastructure
 
         private async void button_GetData_Click(object sender, EventArgs e)
         {
-            button_Stop.Enabled = true;
+            if (stopDataFetching)
+            {
+                stopDataFetching = false; // Сбрасываем флаг остановки получения данных
+                button_Stop.Enabled = true; // Делаем кнопку "Стоп" доступной
+            }
+
+            
+                ClearTradeDataLists();
+
+
+                if (binanceCoins != null)
+                {
+                    binanceCoins.DataReceivedBinance -= OnDataReceived;
+                }
+                if (bybitCoins != null)
+                {
+                    bybitCoins.DataReceivedBybit -= OnDataReceived;
+                }
+                if (kucoinCoins != null)
+                {
+                    kucoinCoins.DataReceivedKucoin -= OnDataReceived;
+                }
+                if (bitgetCoins != null)
+                {
+                    bitgetCoins.DataReceivedBitGet -= OnDataReceived;
+                }
+                //binanceCoins.DataReceivedBinance -= OnDataReceived;
+                //bybitCoins.DataReceivedBybit -= OnDataReceivedBybit;
+                // kucoinCoins.DataReceivedKucoin -= OnDataReceivedKucoin;
+                //bitgetCoins.DataReceivedBitGet -= OnDataReceivedBitGet;
+                
+            
+            await GetDataFromAllApi();
+
+        }
+        private async Task GetDataFromAllApi()
+        {
             Task binanceTask = Task.Run(() => GetDataFromBinance());
             Task bybitTask = Task.Run(() => GetDataFromBybit());
             Task kucoinTask = Task.Run(() => GetDataFromKucoin());
@@ -41,8 +77,15 @@ namespace Infrastructure
 
             await Task.WhenAll(binanceTask, bybitTask, kucoinTask, bitgetTask);
 
-            button_Stop.Enabled = false;
 
+        }
+
+        private void ClearTradeDataLists()
+        {
+            tradeDataList.Clear();
+            tradeDataListBybit.Clear();
+            tradeDataListKucoin.Clear();
+            tradeDataListBitGet.Clear();
         }
 
         private void button_Exit_Click(object sender, EventArgs e)
@@ -51,6 +94,7 @@ namespace Infrastructure
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+
             selectedPair = comboBox.Text;
 
         }
@@ -68,7 +112,7 @@ namespace Infrastructure
         {
             if (selectedPair != null)
             {
-                BybitCoins bybitCoins = new BybitCoins();
+                bybitCoins = new BybitCoins();
                 bybitCoins.DataReceivedBybit += OnDataReceivedBybit;
                 await bybitCoins.GetDataFromApi(selectedPair, 5);
             }
@@ -78,7 +122,7 @@ namespace Infrastructure
         {
             if (selectedPair != null) 
             {
-                KucoinCoins kucoinCoins = new KucoinCoins();
+                kucoinCoins = new KucoinCoins();
                 kucoinCoins.DataReceivedKucoin += OnDataReceivedKucoin;
                 await kucoinCoins.GetDataFromApi(selectedPair, 5);
             }
@@ -87,7 +131,7 @@ namespace Infrastructure
         {
             if (selectedPair != null)
             {
-                BitgetCoins bitgetCoins = new BitgetCoins();
+                bitgetCoins = new BitgetCoins();
                 bitgetCoins.DataReceivedBitGet += OnDataReceivedBitGet;
                 await bitgetCoins.GetDataFromApi(selectedPair, 5);
             }
