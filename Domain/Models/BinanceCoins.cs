@@ -29,10 +29,10 @@ namespace Domain.Models
                 {
                     socketClient = new BinanceSocketClient();
                     
-                    var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTradeUpdatesAsync("BTCUSDT", data =>
+                    var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync("BTCUSDT", data =>
                     {
-                        DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(data.Data.TradeTime, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
-                        DataReceivedBinance?.Invoke(data.Data.Symbol, moscowTime, data.Data.Price);
+                        DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(data.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+                        DataReceivedBinance?.Invoke(data.Data.Symbol, moscowTime, data.Data.LastPrice);
 
                     });
                     await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));

@@ -24,7 +24,7 @@ namespace Domain.Models
                     kucoinSocketClient = new KucoinSocketClient();
                     var tickerSubscriptionResult = await kucoinSocketClient.SpotApi.SubscribeToTickerUpdatesAsync("BTC-USDT", (update) =>
                     {
-                        DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(update.Data.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+                        DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(update.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
                         DataReceivedKucoin?.Invoke(update.Topic, moscowTime, (decimal)update.Data.LastPrice);
                     });
                     await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
