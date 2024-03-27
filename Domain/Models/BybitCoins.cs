@@ -26,9 +26,10 @@ namespace Domain.Models
                 {
                     bybitSocketClient = new BybitSocketClient();
 
-                    var tickerSubscriptionResult = bybitSocketClient.V5SpotApi.SubscribeToTickerUpdatesAsync("BTCUSDT", (update) =>
+                    var tickerSubscriptionResult = await bybitSocketClient.V5SpotApi.SubscribeToTickerUpdatesAsync("BTCUSDT", (update) =>
                     {
-                        DataReceivedBybit?.Invoke(update.Data.Symbol,update.Timestamp,update.Data.LastPrice);
+                        DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(update.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+                        DataReceivedBybit?.Invoke(update.Data.Symbol,moscowTime,update.Data.LastPrice);
                     });
                     await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
                 }

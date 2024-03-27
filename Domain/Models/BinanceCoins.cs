@@ -31,7 +31,8 @@ namespace Domain.Models
                     
                     var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTradeUpdatesAsync("BTCUSDT", data =>
                     {
-                        DataReceivedBinance?.Invoke(data.Data.Symbol, data.Data.TradeTime, data.Data.Price);
+                        DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(data.Data.TradeTime, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+                        DataReceivedBinance?.Invoke(data.Data.Symbol, moscowTime, data.Data.Price);
 
                     });
                     await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));

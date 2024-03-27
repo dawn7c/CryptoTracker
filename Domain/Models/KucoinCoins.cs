@@ -22,9 +22,10 @@ namespace Domain.Models
                 try
                 {
                     kucoinSocketClient = new KucoinSocketClient();
-                    var tickerSubscriptionResult = kucoinSocketClient.SpotApi.SubscribeToTickerUpdatesAsync("BTC-USDT", (update) =>
+                    var tickerSubscriptionResult = await kucoinSocketClient.SpotApi.SubscribeToTickerUpdatesAsync("BTC-USDT", (update) =>
                     {
-                        DataReceivedKucoin?.Invoke(update.Topic, update.Data.Timestamp, (decimal)update.Data.LastPrice);
+                        DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(update.Data.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+                        DataReceivedKucoin?.Invoke(update.Topic, moscowTime, (decimal)update.Data.LastPrice);
                     });
                     await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
                 }

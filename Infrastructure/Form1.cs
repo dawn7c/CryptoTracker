@@ -10,6 +10,7 @@ namespace Infrastructure
         private BindingList<TradeData> tradeDataList = new BindingList<TradeData>();
         private BindingList<TradeData> tradeDataListBybit = new BindingList<TradeData>();
         private BindingList<TradeData> tradeDataListKucoin = new BindingList<TradeData>();
+        private BindingList<TradeData> tradeDataListBitGet = new BindingList<TradeData>();
         public Form1()
         {
             InitializeComponent();
@@ -17,6 +18,7 @@ namespace Infrastructure
             dataGridView1.DataSource = tradeDataList;
             dataGridView2_Bybit.DataSource = tradeDataListBybit;
             dataGridView_Kucoin.DataSource = tradeDataListKucoin;
+            dataGridView_BitGet.DataSource = tradeDataListBitGet;
         }
 
         private async void button_GetData_Click(object sender, EventArgs e)
@@ -25,11 +27,13 @@ namespace Infrastructure
             BinanceCoins binanceCoins = new BinanceCoins();
             BybitCoins bybitCoins = new BybitCoins();
             KucoinCoins kucoinCoins = new KucoinCoins();
+            BitgetCoins bitgetCoins = new BitgetCoins();
             binanceCoins.DataReceivedBinance += OnDataReceived;
             bybitCoins.DataReceivedBybit += OnDataReceivedBybit;
             kucoinCoins.DataReceivedKucoin += OnDataReceivedKucoin;
+            bitgetCoins.DataReceivedBitGet += OnDataReceivedBitGet;
             // Запускаем получение данных из API в асинхронном режиме
-            await Task.WhenAll(binanceCoins.GetDataFromApi(5), bybitCoins.GetDataFromApi(5), kucoinCoins.GetDataFromApi(5));
+            await Task.WhenAll(binanceCoins.GetDataFromApi(5), bybitCoins.GetDataFromApi(5), kucoinCoins.GetDataFromApi(5), bitgetCoins.GetDataFromApi(5));
 
         }
 
@@ -52,7 +56,7 @@ namespace Infrastructure
             }));
         }
 
-        private void OnDataReceivedBybit(string symbol, DateTime timestamp,decimal lastPrice)
+        private void OnDataReceivedBybit(string symbol, DateTime timestamp, decimal lastPrice)
         {
             Invoke(new MethodInvoker(delegate
             {
@@ -64,6 +68,13 @@ namespace Infrastructure
             Invoke(new MethodInvoker(delegate
             {
                 tradeDataListKucoin.Add(new TradeData { Symbol = symbol, TradeTime = timestamp, Price = lastPrice });
+            }));
+        }
+        private void OnDataReceivedBitGet(string symbol, DateTime timestamp,decimal price)
+        {
+            Invoke(new MethodInvoker(delegate
+            {
+                tradeDataListBitGet.Add(new TradeData { Symbol = symbol, TradeTime = timestamp, Price = price});
             }));
         }
 
@@ -80,6 +91,11 @@ namespace Infrastructure
         }
 
         private void dataGridView_Kucoin_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dataGridView_BitGet_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
