@@ -1,15 +1,5 @@
 ﻿using Binance.Net.Clients;
 using Domain.Abstractions;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Net.WebSockets;
-using System.Security.Policy;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 
 namespace Domain.Models
 {
@@ -17,11 +7,10 @@ namespace Domain.Models
     {
         public event Action<string, DateTime, decimal> DataReceivedBinance;
         private BinanceSocketClient socketClient;
-
+        private bool stopGetData;
         private static string binanceApi = "wss://stream.binance.com:9443";
         
-
-        public async Task GetDataFromApi(int intervalSeconds)
+        public async Task GetDataFromApi(string pair, int intervalSeconds)
         {
             while (true)
             {
@@ -29,7 +18,7 @@ namespace Domain.Models
                 {
                     socketClient = new BinanceSocketClient();
                     
-                    var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync("BTCUSDT", data =>
+                    var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync(pair, data =>
                     {
                         DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(data.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
                         DataReceivedBinance?.Invoke(data.Data.Symbol, moscowTime, data.Data.LastPrice);
@@ -44,5 +33,12 @@ namespace Domain.Models
             }
 
         }
+
+        public void StopDataFetching()
+        {
+            stopGetData = true;
+        }
+
+        
     }
 }

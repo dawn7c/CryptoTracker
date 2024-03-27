@@ -7,10 +7,18 @@ namespace Infrastructure
 {
     public partial class Form1 : Form
     {
+        private string selectedPair;
+        private bool stopDataFetching = false;
+        private BinanceCoins binanceCoins;
+        private BybitCoins bybitCoins;
+        private KucoinCoins kucoinCoins;
+        private BitgetCoins bitgetCoins;
+
         private BindingList<TradeData> tradeDataList = new BindingList<TradeData>();
         private BindingList<TradeData> tradeDataListBybit = new BindingList<TradeData>();
         private BindingList<TradeData> tradeDataListKucoin = new BindingList<TradeData>();
         private BindingList<TradeData> tradeDataListBitGet = new BindingList<TradeData>();
+        private List<string> pairs = new List<string> { "BTCUSDT", "ETHUSDT", "XRPUSDT" };
         public Form1()
         {
             InitializeComponent();
@@ -19,21 +27,21 @@ namespace Infrastructure
             dataGridView2_Bybit.DataSource = tradeDataListBybit;
             dataGridView_Kucoin.DataSource = tradeDataListKucoin;
             dataGridView_BitGet.DataSource = tradeDataListBitGet;
+            comboBox.Text = "Выберите пару";
+            comboBox.Items.AddRange(pairs.ToArray());
         }
 
         private async void button_GetData_Click(object sender, EventArgs e)
         {
             button_Stop.Enabled = true;
-            BinanceCoins binanceCoins = new BinanceCoins();
-            BybitCoins bybitCoins = new BybitCoins();
-            KucoinCoins kucoinCoins = new KucoinCoins();
-            BitgetCoins bitgetCoins = new BitgetCoins();
-            binanceCoins.DataReceivedBinance += OnDataReceived;
-            bybitCoins.DataReceivedBybit += OnDataReceivedBybit;
-            kucoinCoins.DataReceivedKucoin += OnDataReceivedKucoin;
-            bitgetCoins.DataReceivedBitGet += OnDataReceivedBitGet;
-            // Запускаем получение данных из API в асинхронном режиме
-            await Task.WhenAll(binanceCoins.GetDataFromApi(5), bybitCoins.GetDataFromApi(5), kucoinCoins.GetDataFromApi(5), bitgetCoins.GetDataFromApi(5));
+            Task binanceTask = Task.Run(() => GetDataFromBinance());
+            Task bybitTask = Task.Run(() => GetDataFromBybit());
+            Task kucoinTask = Task.Run(() => GetDataFromKucoin());
+            Task bitgetTask = Task.Run(() => GetDataFromBitget());
+
+            await Task.WhenAll(binanceTask, bybitTask, kucoinTask, bitgetTask);
+
+            button_Stop.Enabled = false;
 
         }
 
@@ -41,45 +49,90 @@ namespace Infrastructure
         {
             Application.Exit();
         }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
+            selectedPair = comboBox.Text;
 
         }
+        private async Task GetDataFromBinance()
+        {
+            if (selectedPair != null)
+            {
+                binanceCoins = new BinanceCoins();
+                binanceCoins.DataReceivedBinance += OnDataReceived;
+                await binanceCoins.GetDataFromApi(selectedPair, 5);
+            }
+            
+        }
+        private async Task GetDataFromBybit()
+        {
+            if (selectedPair != null)
+            {
+                BybitCoins bybitCoins = new BybitCoins();
+                bybitCoins.DataReceivedBybit += OnDataReceivedBybit;
+                await bybitCoins.GetDataFromApi(selectedPair, 5);
+            }
+            
+        }
+        private async Task GetDataFromKucoin()
+        {
+            if (selectedPair != null) 
+            {
+                KucoinCoins kucoinCoins = new KucoinCoins();
+                kucoinCoins.DataReceivedKucoin += OnDataReceivedKucoin;
+                await kucoinCoins.GetDataFromApi(selectedPair, 5);
+            }
+        }
+        private async Task GetDataFromBitget()
+        {
+            if (selectedPair != null)
+            {
+                BitgetCoins bitgetCoins = new BitgetCoins();
+                bitgetCoins.DataReceivedBitGet += OnDataReceivedBitGet;
+                await bitgetCoins.GetDataFromApi(selectedPair, 5);
+            }
+                
+        }
+
         private void OnDataReceived(string symbol, DateTime tradeTime, decimal price)
         {
-            // Обновляем UI через поток, в котором он был создан
+            if (stopDataFetching) return;
             Invoke(new MethodInvoker(delegate
             {
-                // Добавляем новые данные в список для отображения в dataGridView1
-                tradeDataList.Add(new TradeData { Symbol = symbol, TradeTime = tradeTime, Price = price });
+                tradeDataList.Add(new TradeData { Symbol = symbol, ChangeTime = tradeTime, Price = price });
             }));
         }
 
         private void OnDataReceivedBybit(string symbol, DateTime timestamp, decimal lastPrice)
         {
+            if (stopDataFetching) return;
             Invoke(new MethodInvoker(delegate
             {
-                tradeDataListBybit.Add(new TradeData { Symbol = symbol, TradeTime = timestamp, Price = lastPrice });
+                tradeDataListBybit.Add(new TradeData { Symbol = symbol, ChangeTime = timestamp, Price = lastPrice });
             }));
         }
         private void OnDataReceivedKucoin(string symbol, DateTime timestamp, decimal lastPrice)
         {
+            if (stopDataFetching) return;
+
             Invoke(new MethodInvoker(delegate
             {
-                tradeDataListKucoin.Add(new TradeData { Symbol = symbol, TradeTime = timestamp, Price = lastPrice });
+                tradeDataListKucoin.Add(new TradeData { Symbol = symbol, ChangeTime = timestamp, Price = lastPrice });
             }));
         }
-        private void OnDataReceivedBitGet(string symbol, DateTime timestamp,decimal price)
+        private void OnDataReceivedBitGet(string symbol, DateTime timestamp, decimal price)
         {
+            if (stopDataFetching) return;
             Invoke(new MethodInvoker(delegate
             {
-                tradeDataListBitGet.Add(new TradeData { Symbol = symbol, TradeTime = timestamp, Price = price});
+                tradeDataListBitGet.Add(new TradeData { Symbol = symbol, ChangeTime = timestamp, Price = price });
             }));
         }
+        
 
         private void button_Stop_Click(object sender, EventArgs e)
         {
+            stopDataFetching = true;
 
             button_Stop.Enabled = false;
 
@@ -99,5 +152,17 @@ namespace Infrastructure
         {
 
         }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        
     }
 }

@@ -39,6 +39,7 @@
             label3 = new Label();
             dataGridView_BitGet = new DataGridView();
             label4 = new Label();
+            comboBox = new ComboBox();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView2_Bybit).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView_Kucoin).BeginInit();
@@ -47,7 +48,7 @@
             // 
             // button_GetData
             // 
-            button_GetData.Location = new Point(487, 560);
+            button_GetData.Location = new Point(516, 575);
             button_GetData.Name = "button_GetData";
             button_GetData.Size = new Size(131, 23);
             button_GetData.TabIndex = 0;
@@ -57,7 +58,7 @@
             // 
             // button_Exit
             // 
-            button_Exit.Location = new Point(1267, 560);
+            button_Exit.Location = new Point(1297, 575);
             button_Exit.Name = "button_Exit";
             button_Exit.Size = new Size(75, 23);
             button_Exit.TabIndex = 1;
@@ -70,16 +71,16 @@
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(4, 34);
+            dataGridView1.Location = new Point(6, 57);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
-            dataGridView1.Size = new Size(296, 510);
+            dataGridView1.Size = new Size(331, 500);
             dataGridView1.TabIndex = 2;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // button_Stop
             // 
-            button_Stop.Location = new Point(624, 560);
+            button_Stop.Location = new Point(653, 575);
             button_Stop.Name = "button_Stop";
             button_Stop.Size = new Size(132, 23);
             button_Stop.TabIndex = 3;
@@ -92,39 +93,43 @@
             dataGridView2_Bybit.AllowUserToAddRows = false;
             dataGridView2_Bybit.AllowUserToDeleteRows = false;
             dataGridView2_Bybit.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView2_Bybit.Location = new Point(306, 34);
+            dataGridView2_Bybit.Location = new Point(360, 57);
             dataGridView2_Bybit.Name = "dataGridView2_Bybit";
             dataGridView2_Bybit.ReadOnly = true;
-            dataGridView2_Bybit.Size = new Size(324, 510);
+            dataGridView2_Bybit.Size = new Size(325, 500);
             dataGridView2_Bybit.TabIndex = 4;
             dataGridView2_Bybit.CellContentClick += dataGridView2_Bybit_CellContentClick;
             // 
             // dataGridView_Kucoin
             // 
+            dataGridView_Kucoin.AllowUserToAddRows = false;
             dataGridView_Kucoin.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView_Kucoin.Location = new Point(636, 34);
+            dataGridView_Kucoin.Location = new Point(710, 57);
             dataGridView_Kucoin.Name = "dataGridView_Kucoin";
-            dataGridView_Kucoin.Size = new Size(347, 510);
+            dataGridView_Kucoin.Size = new Size(325, 500);
             dataGridView_Kucoin.TabIndex = 5;
             dataGridView_Kucoin.CellContentClick += dataGridView_Kucoin_CellContentClick;
             // 
             // label1
             // 
+            label1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label1.AutoSize = true;
             label1.BackColor = SystemColors.ActiveCaption;
             label1.BorderStyle = BorderStyle.FixedSingle;
-            label1.Location = new Point(112, 12);
+            label1.Location = new Point(131, 37);
             label1.Name = "label1";
+            label1.RightToLeft = RightToLeft.No;
             label1.Size = new Size(51, 17);
             label1.TabIndex = 6;
             label1.Text = "Binance";
             // 
             // label2
             // 
+            label2.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label2.AutoSize = true;
             label2.BackColor = SystemColors.ActiveCaption;
             label2.BorderStyle = BorderStyle.FixedSingle;
-            label2.Location = new Point(410, 12);
+            label2.Location = new Point(507, 37);
             label2.Name = "label2";
             label2.Size = new Size(36, 17);
             label2.TabIndex = 7;
@@ -132,40 +137,54 @@
             // 
             // label3
             // 
+            label3.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label3.AutoSize = true;
             label3.BackColor = SystemColors.ActiveCaption;
             label3.BorderStyle = BorderStyle.FixedSingle;
-            label3.Location = new Point(783, 12);
+            label3.Location = new Point(841, 37);
             label3.Name = "label3";
             label3.Size = new Size(46, 17);
             label3.TabIndex = 8;
             label3.Text = "Kucoin";
+            label3.Click += label3_Click;
             // 
             // dataGridView_BitGet
             // 
+            dataGridView_BitGet.AllowUserToAddRows = false;
             dataGridView_BitGet.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView_BitGet.Location = new Point(989, 34);
+            dataGridView_BitGet.Location = new Point(1056, 57);
             dataGridView_BitGet.Name = "dataGridView_BitGet";
-            dataGridView_BitGet.Size = new Size(353, 510);
+            dataGridView_BitGet.Size = new Size(325, 500);
             dataGridView_BitGet.TabIndex = 9;
             dataGridView_BitGet.CellContentClick += dataGridView_BitGet_CellContentClick;
             // 
             // label4
             // 
+            label4.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             label4.AutoSize = true;
             label4.BackColor = SystemColors.ActiveCaption;
             label4.BorderStyle = BorderStyle.FixedSingle;
-            label4.Location = new Point(1157, 12);
+            label4.Location = new Point(1219, 37);
             label4.Name = "label4";
             label4.Size = new Size(41, 17);
             label4.TabIndex = 10;
             label4.Text = "BitGet";
             // 
+            // comboBox
+            // 
+            comboBox.FormattingEnabled = true;
+            comboBox.Location = new Point(6, 3);
+            comboBox.Name = "comboBox";
+            comboBox.Size = new Size(131, 23);
+            comboBox.TabIndex = 11;
+            comboBox.SelectedIndexChanged += comboBox1_SelectedIndexChanged;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1354, 595);
+            ClientSize = new Size(1384, 601);
+            Controls.Add(comboBox);
             Controls.Add(label4);
             Controls.Add(dataGridView_BitGet);
             Controls.Add(label3);
@@ -200,5 +219,6 @@
         private Label label3;
         private DataGridView dataGridView_BitGet;
         private Label label4;
+        private ComboBox comboBox;
     }
 }
