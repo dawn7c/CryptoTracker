@@ -15,13 +15,16 @@ namespace Infrastructure
             dataGridView1.DataSource = tradeDataList;
         }
 
-        private void button_GetData_Click(object sender, EventArgs e)
+        private async void button_GetData_Click(object sender, EventArgs e)
         {
+            button_Stop.Enabled = true;
             BinanceCoins binanceCoins = new BinanceCoins();
-            GetDataDelegate getDataDelegate = binanceCoins.GetDataFromApi;
-
-            getDataDelegate(1);
+            binanceCoins.DataReceived += OnDataReceived;
+            // Запускаем получение данных из API в асинхронном режиме
+            await binanceCoins.GetDataFromApi(5);
             dataGridView1.DataSource = binanceCoins.Symbol;
+
+           
         }
 
         private void button_Exit_Click(object sender, EventArgs e)
@@ -33,14 +36,21 @@ namespace Infrastructure
         {
 
         }
-        private void OnDataReceived(string tradeTime, decimal quantity, decimal price)
+        private void OnDataReceived(string symbol, DateTime tradeTime, decimal quantity, decimal price)
         {
             // Обновляем UI через поток, в котором он был создан
             Invoke(new MethodInvoker(delegate
             {
                 // Добавляем новые данные в список для отображения в dataGridView1
-                tradeDataList.Add(new TradeData { TradeTime = tradeTime, Quantity = quantity, Price = price });
+                tradeDataList.Add(new TradeData { Symbol = symbol, TradeTime = tradeTime, Quantity = quantity, Price = price });
             }));
+        }
+
+        private void button_Stop_Click(object sender, EventArgs e)
+        {
+            
+            button_Stop.Enabled = false;
+
         }
     }
 }

@@ -31,14 +31,15 @@
             button_GetData = new Button();
             button_Exit = new Button();
             dataGridView1 = new DataGridView();
+            button_Stop = new Button();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // button_GetData
             // 
-            button_GetData.Location = new Point(255, 415);
+            button_GetData.Location = new Point(487, 560);
             button_GetData.Name = "button_GetData";
-            button_GetData.Size = new Size(271, 23);
+            button_GetData.Size = new Size(131, 23);
             button_GetData.TabIndex = 0;
             button_GetData.Text = "Получить данные";
             button_GetData.UseVisualStyleBackColor = true;
@@ -46,7 +47,7 @@
             // 
             // button_Exit
             // 
-            button_Exit.Location = new Point(713, 415);
+            button_Exit.Location = new Point(1267, 560);
             button_Exit.Name = "button_Exit";
             button_Exit.Size = new Size(75, 23);
             button_Exit.TabIndex = 1;
@@ -59,18 +60,29 @@
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.AllowUserToDeleteRows = false;
             dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView1.Location = new Point(12, 61);
+            dataGridView1.Location = new Point(4, 12);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
-            dataGridView1.Size = new Size(776, 253);
+            dataGridView1.Size = new Size(1338, 532);
             dataGridView1.TabIndex = 2;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
+            // 
+            // button_Stop
+            // 
+            button_Stop.Location = new Point(624, 560);
+            button_Stop.Name = "button_Stop";
+            button_Stop.Size = new Size(132, 23);
+            button_Stop.TabIndex = 3;
+            button_Stop.Text = "Стоп";
+            button_Stop.UseVisualStyleBackColor = true;
+            button_Stop.Click += button_Stop_Click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(1354, 595);
+            Controls.Add(button_Stop);
             Controls.Add(dataGridView1);
             Controls.Add(button_Exit);
             Controls.Add(button_GetData);
@@ -85,5 +97,6 @@
         private Button button_GetData;
         private Button button_Exit;
         private DataGridView dataGridView1;
+        private Button button_Stop;
     }
 }
