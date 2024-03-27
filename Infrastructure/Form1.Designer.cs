@@ -32,7 +32,9 @@
             button_Exit = new Button();
             dataGridView1 = new DataGridView();
             button_Stop = new Button();
+            dataGridView2_Bybit = new DataGridView();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2_Bybit).BeginInit();
             SuspendLayout();
             // 
             // button_GetData
@@ -63,7 +65,7 @@
             dataGridView1.Location = new Point(4, 12);
             dataGridView1.Name = "dataGridView1";
             dataGridView1.ReadOnly = true;
-            dataGridView1.Size = new Size(1338, 532);
+            dataGridView1.Size = new Size(329, 532);
             dataGridView1.TabIndex = 2;
             dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
@@ -77,11 +79,24 @@
             button_Stop.UseVisualStyleBackColor = true;
             button_Stop.Click += button_Stop_Click;
             // 
+            // dataGridView2_Bybit
+            // 
+            dataGridView2_Bybit.AllowUserToAddRows = false;
+            dataGridView2_Bybit.AllowUserToDeleteRows = false;
+            dataGridView2_Bybit.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView2_Bybit.Location = new Point(361, 12);
+            dataGridView2_Bybit.Name = "dataGridView2_Bybit";
+            dataGridView2_Bybit.ReadOnly = true;
+            dataGridView2_Bybit.Size = new Size(339, 532);
+            dataGridView2_Bybit.TabIndex = 4;
+            dataGridView2_Bybit.CellContentClick += dataGridView2_Bybit_CellContentClick;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1354, 595);
+            Controls.Add(dataGridView2_Bybit);
             Controls.Add(button_Stop);
             Controls.Add(dataGridView1);
             Controls.Add(button_Exit);
@@ -89,6 +104,7 @@
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView2_Bybit).EndInit();
             ResumeLayout(false);
         }
 
@@ -98,5 +114,6 @@
         private Button button_Exit;
         private DataGridView dataGridView1;
         private Button button_Stop;
+        private DataGridView dataGridView2_Bybit;
     }
 }

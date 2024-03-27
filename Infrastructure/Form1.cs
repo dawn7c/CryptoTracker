@@ -8,23 +8,25 @@ namespace Infrastructure
     public partial class Form1 : Form
     {
         private BindingList<TradeData> tradeDataList = new BindingList<TradeData>();
+        private BindingList<TradeData> tradeDataListBybit = new BindingList<TradeData>();
         public Form1()
         {
             InitializeComponent();
 
             dataGridView1.DataSource = tradeDataList;
+            dataGridView2_Bybit.DataSource = tradeDataListBybit;
         }
 
         private async void button_GetData_Click(object sender, EventArgs e)
         {
             button_Stop.Enabled = true;
             BinanceCoins binanceCoins = new BinanceCoins();
+            BybitCoins bybitCoins = new BybitCoins();
             binanceCoins.DataReceived += OnDataReceived;
+            bybitCoins.DataReceived += OnDataReceivedBybit;
             // Запускаем получение данных из API в асинхронном режиме
-            await binanceCoins.GetDataFromApi(5);
-            dataGridView1.DataSource = binanceCoins.Symbol;
+            await Task.WhenAll(binanceCoins.GetDataFromApi(5), bybitCoins.GetDataFromApi(5));
 
-           
         }
 
         private void button_Exit_Click(object sender, EventArgs e)
@@ -46,10 +48,23 @@ namespace Infrastructure
             }));
         }
 
+        private void OnDataReceivedBybit(string symbol, decimal lastPrice)
+        {
+            Invoke(new MethodInvoker(delegate
+            {
+                tradeDataListBybit.Add(new TradeData { Symbol = symbol, Price = lastPrice });
+            }));
+        }
+
         private void button_Stop_Click(object sender, EventArgs e)
         {
-            
+
             button_Stop.Enabled = false;
+
+        }
+
+        private void dataGridView2_Bybit_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
 
         }
     }
