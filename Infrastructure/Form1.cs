@@ -9,12 +9,14 @@ namespace Infrastructure
     {
         private BindingList<TradeData> tradeDataList = new BindingList<TradeData>();
         private BindingList<TradeData> tradeDataListBybit = new BindingList<TradeData>();
+        private BindingList<TradeData> tradeDataListKucoin = new BindingList<TradeData>();
         public Form1()
         {
             InitializeComponent();
 
             dataGridView1.DataSource = tradeDataList;
             dataGridView2_Bybit.DataSource = tradeDataListBybit;
+            dataGridView_Kucoin.DataSource = tradeDataListKucoin;
         }
 
         private async void button_GetData_Click(object sender, EventArgs e)
@@ -22,10 +24,12 @@ namespace Infrastructure
             button_Stop.Enabled = true;
             BinanceCoins binanceCoins = new BinanceCoins();
             BybitCoins bybitCoins = new BybitCoins();
+            KucoinCoins kucoinCoins = new KucoinCoins();
             binanceCoins.DataReceived += OnDataReceived;
             bybitCoins.DataReceived += OnDataReceivedBybit;
+            kucoinCoins.DataReceivedKucoin += OnDataReceivedKucoin;
             // Запускаем получение данных из API в асинхронном режиме
-            await Task.WhenAll(binanceCoins.GetDataFromApi(5), bybitCoins.GetDataFromApi(5));
+            await Task.WhenAll(binanceCoins.GetDataFromApi(5), bybitCoins.GetDataFromApi(5), kucoinCoins.GetDataFromApi(5));
 
         }
 
@@ -55,6 +59,13 @@ namespace Infrastructure
                 tradeDataListBybit.Add(new TradeData { Symbol = symbol, Price = lastPrice });
             }));
         }
+        private void OnDataReceivedKucoin(string symbol, decimal lastPrice)
+        {
+            Invoke(new MethodInvoker(delegate
+            {
+                tradeDataListKucoin.Add(new TradeData { Symbol = symbol, Price = lastPrice });
+            }));
+        }
 
         private void button_Stop_Click(object sender, EventArgs e)
         {
@@ -64,6 +75,11 @@ namespace Infrastructure
         }
 
         private void dataGridView2_Bybit_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void dataGridView_Kucoin_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
