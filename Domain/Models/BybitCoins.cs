@@ -15,7 +15,7 @@ namespace Domain.Models
     {
         private static string bybitAPI = "wss://stream.bybit.com/v5/public/spot";
 
-        public event Action<string, decimal> DataReceived;
+        public event Action<string, DateTime, decimal> DataReceivedBybit;
         private BybitSocketClient bybitSocketClient;
 
         public async Task GetDataFromApi(int intervalSeconds)
@@ -28,7 +28,7 @@ namespace Domain.Models
 
                     var tickerSubscriptionResult = bybitSocketClient.V5SpotApi.SubscribeToTickerUpdatesAsync("BTCUSDT", (update) =>
                     {
-                        DataReceived?.Invoke(update.Data.Symbol, update.Data.LastPrice);
+                        DataReceivedBybit?.Invoke(update.Data.Symbol,update.Timestamp,update.Data.LastPrice);
                     });
                     await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
                 }

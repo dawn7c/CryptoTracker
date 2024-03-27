@@ -15,7 +15,7 @@ namespace Domain.Models
 {
     public class BinanceCoins : Coin, IRepository
     {
-        public event Action<string, DateTime, decimal, decimal> DataReceived;
+        public event Action<string, DateTime, decimal> DataReceivedBinance;
         private BinanceSocketClient socketClient;
 
         private static string binanceApi = "wss://stream.binance.com:9443";
@@ -31,7 +31,7 @@ namespace Domain.Models
                     
                     var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTradeUpdatesAsync("BTCUSDT", data =>
                     {
-                        DataReceived?.Invoke(data.Data.Symbol, data.Data.TradeTime, data.Data.Quantity, data.Data.Price);
+                        DataReceivedBinance?.Invoke(data.Data.Symbol, data.Data.TradeTime, data.Data.Price);
 
                     });
                     await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));

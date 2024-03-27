@@ -12,7 +12,7 @@ namespace Domain.Models
     public class KucoinCoins : Coin, IRepository
     {
         private static string kucoinApi = "wss://ws-api-spot.kucoin.com/";
-        public event Action<string, decimal> DataReceivedKucoin;
+        public event Action<string, DateTime, decimal> DataReceivedKucoin;
         private KucoinSocketClient kucoinSocketClient;
 
         public async Task GetDataFromApi(int intervalSeconds)
@@ -24,7 +24,7 @@ namespace Domain.Models
                     kucoinSocketClient = new KucoinSocketClient();
                     var tickerSubscriptionResult = kucoinSocketClient.SpotApi.SubscribeToTickerUpdatesAsync("BTC-USDT", (update) =>
                     {
-                        DataReceivedKucoin?.Invoke(update.Data.Symbol, (decimal)update.Data.LastPrice);
+                        DataReceivedKucoin?.Invoke(update.Topic, update.Data.Timestamp, (decimal)update.Data.LastPrice);
                     });
                     await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
                 }

@@ -25,8 +25,8 @@ namespace Infrastructure
             BinanceCoins binanceCoins = new BinanceCoins();
             BybitCoins bybitCoins = new BybitCoins();
             KucoinCoins kucoinCoins = new KucoinCoins();
-            binanceCoins.DataReceived += OnDataReceived;
-            bybitCoins.DataReceived += OnDataReceivedBybit;
+            binanceCoins.DataReceivedBinance += OnDataReceived;
+            bybitCoins.DataReceivedBybit += OnDataReceivedBybit;
             kucoinCoins.DataReceivedKucoin += OnDataReceivedKucoin;
             // Запускаем получение данных из API в асинхронном режиме
             await Task.WhenAll(binanceCoins.GetDataFromApi(5), bybitCoins.GetDataFromApi(5), kucoinCoins.GetDataFromApi(5));
@@ -42,28 +42,28 @@ namespace Infrastructure
         {
 
         }
-        private void OnDataReceived(string symbol, DateTime tradeTime, decimal quantity, decimal price)
+        private void OnDataReceived(string symbol, DateTime tradeTime, decimal price)
         {
             // Обновляем UI через поток, в котором он был создан
             Invoke(new MethodInvoker(delegate
             {
                 // Добавляем новые данные в список для отображения в dataGridView1
-                tradeDataList.Add(new TradeData { Symbol = symbol, TradeTime = tradeTime, Quantity = quantity, Price = price });
+                tradeDataList.Add(new TradeData { Symbol = symbol, TradeTime = tradeTime, Price = price });
             }));
         }
 
-        private void OnDataReceivedBybit(string symbol, decimal lastPrice)
+        private void OnDataReceivedBybit(string symbol, DateTime timestamp,decimal lastPrice)
         {
             Invoke(new MethodInvoker(delegate
             {
-                tradeDataListBybit.Add(new TradeData { Symbol = symbol, Price = lastPrice });
+                tradeDataListBybit.Add(new TradeData { Symbol = symbol, TradeTime = timestamp, Price = lastPrice });
             }));
         }
-        private void OnDataReceivedKucoin(string symbol, decimal lastPrice)
+        private void OnDataReceivedKucoin(string symbol, DateTime timestamp, decimal lastPrice)
         {
             Invoke(new MethodInvoker(delegate
             {
-                tradeDataListKucoin.Add(new TradeData { Symbol = symbol, Price = lastPrice });
+                tradeDataListKucoin.Add(new TradeData { Symbol = symbol, TradeTime = timestamp, Price = lastPrice });
             }));
         }
 

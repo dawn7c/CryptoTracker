@@ -10,7 +10,7 @@ namespace Domain.Models
     {
         public string Symbol {  get; set; }
         public DateTime? TradeTime { get; set; }
-        public decimal? Quantity { get; set; }
+        // public decimal? Quantity { get; set; }
         public decimal Price { get; set; }
     }
 }
