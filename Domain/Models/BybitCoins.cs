@@ -10,7 +10,6 @@ namespace Domain.Models
 {
     public class BybitCoins : Coin, IRepository
     {
-        private bool stopGetData;
         public event Action<string, DateTime, decimal> DataReceivedBybit;
         private BybitSocketClient bybitSocketClient;
 
@@ -31,11 +30,6 @@ namespace Domain.Models
             {
               Console.WriteLine($"Error API: {ex.Message}");
             }
-        }
-
-        public void StopDataFetching()
-        {
-            stopGetData = true;
         }
         public async Task StopData()
         {

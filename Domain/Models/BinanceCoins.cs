@@ -7,7 +7,6 @@ namespace Domain.Models
     {
         public event Action<string, DateTime, decimal> DataReceivedBinance;
         private BinanceSocketClient socketClient;
-        private bool stopGetData;
         
         public async Task GetDataFromApi(string pair, int intervalSeconds, bool stopGetData)
         {
@@ -29,10 +28,6 @@ namespace Domain.Models
               }
         }
 
-        public void StopDataFetching()
-        {
-            stopGetData = true;
-        }
         public async Task StopData()
         {
             await socketClient.UnsubscribeAllAsync();
