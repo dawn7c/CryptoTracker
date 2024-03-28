@@ -3,7 +3,7 @@ using Domain.Abstractions;
 
 namespace Domain.Models
 {
-    public class BinanceCoins : Coin, IRepository
+    public class BinanceCoins : IRepository
     {
         public event Action<string, DateTime, decimal> DataReceivedBinance;
         private BinanceSocketClient socketClient;
