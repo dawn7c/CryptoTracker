@@ -12,29 +12,30 @@ namespace Domain.Models
         private bool stopGetData;
         private static string binanceApi = "wss://stream.binance.com:9443";
         
-        public async Task GetDataFromApi(string pair, int intervalSeconds)
+        public async Task GetDataFromApi(string pair, int intervalSeconds, bool stopGetData)
         {
-            try
-            {
-                if (socketClient != null)
+            
+                
+
+                try
                 {
-                    await socketClient.UnsubscribeAllAsync();
-                    socketClient = null;
+
+                    socketClient = new BinanceSocketClient();
+                    var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync(pair, data =>
+                    {
+                        DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(data.Data.OpenTime, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+                        DataReceivedBinance?.Invoke(data.Data.Symbol, moscowTime, data.Data.LastPrice);
+
+                    });
+
+                    await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
+
                 }
-                socketClient = new BinanceSocketClient();
-                var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync(pair, data =>
+                catch (Exception ex)
                 {
-                    DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(data.Timestamp, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
-                    DataReceivedBinance?.Invoke(data.Data.Symbol, moscowTime, data.Data.LastPrice);
-
-                });
-
-                await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
-            }
-            catch (Exception ex)
-            {
-              Console.WriteLine($"Error API: {ex.Message}");
-            }
+                    Console.WriteLine($"Error API: {ex.Message}");
+                }
+            
             
 
         }
@@ -43,7 +44,12 @@ namespace Domain.Models
         {
             stopGetData = true;
         }
+        public async Task StopData()
+        {
+            await socketClient.UnsubscribeAllAsync();
+            socketClient = null;
+        }
 
-        
+
     }
 }

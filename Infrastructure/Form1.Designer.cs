@@ -76,7 +76,6 @@
             dataGridView1.ReadOnly = true;
             dataGridView1.Size = new Size(331, 500);
             dataGridView1.TabIndex = 2;
-            dataGridView1.CellContentClick += dataGridView1_CellContentClick;
             // 
             // button_Stop
             // 
@@ -98,7 +97,6 @@
             dataGridView2_Bybit.ReadOnly = true;
             dataGridView2_Bybit.Size = new Size(325, 500);
             dataGridView2_Bybit.TabIndex = 4;
-            dataGridView2_Bybit.CellContentClick += dataGridView2_Bybit_CellContentClick;
             // 
             // dataGridView_Kucoin
             // 
@@ -108,7 +106,6 @@
             dataGridView_Kucoin.Name = "dataGridView_Kucoin";
             dataGridView_Kucoin.Size = new Size(325, 500);
             dataGridView_Kucoin.TabIndex = 5;
-            dataGridView_Kucoin.CellContentClick += dataGridView_Kucoin_CellContentClick;
             // 
             // label1
             // 
@@ -146,7 +143,6 @@
             label3.Size = new Size(46, 17);
             label3.TabIndex = 8;
             label3.Text = "Kucoin";
-            label3.Click += label3_Click;
             // 
             // dataGridView_BitGet
             // 
@@ -156,7 +152,6 @@
             dataGridView_BitGet.Name = "dataGridView_BitGet";
             dataGridView_BitGet.Size = new Size(325, 500);
             dataGridView_BitGet.TabIndex = 9;
-            dataGridView_BitGet.CellContentClick += dataGridView_BitGet_CellContentClick;
             // 
             // label4
             // 
