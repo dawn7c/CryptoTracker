@@ -13,7 +13,6 @@ namespace Domain.Models
         {
             try
             {
-
                 bitGetSocketClient = new BitgetSocketClient();
                 var tickerSubscriptionResult = await bitGetSocketClient.SpotApi.SubscribeToTickerUpdatesAsync(pair, update =>
                 {

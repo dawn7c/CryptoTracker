@@ -31,7 +31,6 @@ namespace Domain.Models
             {
               Console.WriteLine($"Error API: {ex.Message}");
             }
-            
         }
 
         public void StopDataFetching()
