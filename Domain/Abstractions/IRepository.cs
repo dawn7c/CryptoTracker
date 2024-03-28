@@ -8,6 +8,7 @@ namespace Domain.Abstractions
 {
     public interface IRepository
     {
-         Task GetDataFromApi(int intervalMinutes);
+         Task GetDataFromApi(string pair, int intervalMinutes, bool stopGet);
+         Task StopData();
     }
 }
