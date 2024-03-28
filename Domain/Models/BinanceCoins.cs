@@ -1,6 +1,4 @@
 ﻿using Binance.Net.Clients;
-using Bitget.Net.Clients;
-using Bitget.Net.Interfaces.Clients;
 using Domain.Abstractions;
 
 namespace Domain.Models
@@ -9,47 +7,31 @@ namespace Domain.Models
     {
         public event Action<string, DateTime, decimal> DataReceivedBinance;
         private BinanceSocketClient socketClient;
-        private bool stopGetData;
-        private static string binanceApi = "wss://stream.binance.com:9443";
         
         public async Task GetDataFromApi(string pair, int intervalSeconds, bool stopGetData)
         {
-            
-                
-
-                try
+            try
+            {
+                socketClient = new BinanceSocketClient();
+                var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync(pair, data =>
                 {
+                    DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(data.Data.OpenTime, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
+                    DataReceivedBinance?.Invoke(data.Data.Symbol, moscowTime, data.Data.LastPrice);
 
-                    socketClient = new BinanceSocketClient();
-                    var subscription = await socketClient.SpotApi.ExchangeData.SubscribeToTickerUpdatesAsync(pair, data =>
-                    {
-                        DateTime moscowTime = TimeZoneInfo.ConvertTimeFromUtc(data.Data.OpenTime, TimeZoneInfo.FindSystemTimeZoneById("Russian Standard Time"));
-                        DataReceivedBinance?.Invoke(data.Data.Symbol, moscowTime, data.Data.LastPrice);
+                });
 
-                    });
-
-                    await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
-
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Error API: {ex.Message}");
-                }
-            
-            
-
+                await Task.Delay(TimeSpan.FromSeconds(intervalSeconds));
+            }
+             catch (Exception ex)
+              {
+                Console.WriteLine($"Error API: {ex.Message}");
+              }
         }
 
-        public void StopDataFetching()
-        {
-            stopGetData = true;
-        }
         public async Task StopData()
         {
             await socketClient.UnsubscribeAllAsync();
             socketClient = null;
         }
-
-
     }
 }

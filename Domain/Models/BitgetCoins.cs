@@ -5,7 +5,6 @@ namespace Domain.Models
 {
     public class BitgetCoins : Coin, IRepository
     {
-        private bool stopGetData;
         public event Action<string, DateTime, decimal>DataReceivedBitGet;
         private BitgetSocketClient bitGetSocketClient;
 
@@ -13,7 +12,6 @@ namespace Domain.Models
         {
             try
             {
-
                 bitGetSocketClient = new BitgetSocketClient();
                 var tickerSubscriptionResult = await bitGetSocketClient.SpotApi.SubscribeToTickerUpdatesAsync(pair, update =>
                 {
@@ -35,9 +33,5 @@ namespace Domain.Models
             bitGetSocketClient = null;
         }
 
-        public void StopDataFetching()
-        {
-            stopGetData = true;
-        }
     }
 }

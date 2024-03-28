@@ -115,6 +115,7 @@ namespace Infrastructure
             Invoke(new MethodInvoker(delegate
             {
                 tradeDataList.Add(new TradeData { Symbol = symbol, ChangeTime = tradeTime, Price = price });
+
             }));
         }
 

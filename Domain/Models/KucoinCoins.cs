@@ -1,7 +1,4 @@
 ﻿
-using Bitget.Net.Clients;
-using CryptoExchange.Net.Interfaces;
-using CryptoExchange.Net.Sockets;
 using Domain.Abstractions;
 using Kucoin.Net.Clients;
 
@@ -10,12 +7,9 @@ namespace Domain.Models
 {
     public class KucoinCoins : Coin, IRepository
     {
-        private bool stopGetData;
         public event Action<string, DateTime, decimal> DataReceivedKucoin;
         public KucoinSocketClient kucoinSocketClient;
-        private string currentPair;
         
-
         public async Task GetDataFromApi(string pair, int intervalSeconds, bool stopGetData)
         {
             string formattedPair = FormatPairForKucoin(pair);

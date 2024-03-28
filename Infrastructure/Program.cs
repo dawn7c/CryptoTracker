@@ -6,7 +6,6 @@ namespace Infrastructure
         [STAThread]
         static void Main()
         {
-            
             ApplicationConfiguration.Initialize();
             Application.Run(new Form1());
         }
