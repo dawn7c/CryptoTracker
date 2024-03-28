@@ -5,7 +5,7 @@ using Kucoin.Net.Clients;
 
 namespace Domain.Models
 {
-    public class KucoinCoins : Coin, IRepository
+    public class KucoinCoins :  IRepository
     {
         public event Action<string, DateTime, decimal> DataReceivedKucoin;
         public KucoinSocketClient kucoinSocketClient;

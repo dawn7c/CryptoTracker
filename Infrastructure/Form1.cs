@@ -30,19 +30,32 @@ namespace Infrastructure
             dataGridView_BitGet.DataSource = tradeDataListBitGet;
             comboBox.Text = "Выберите пару";
             comboBox.Items.AddRange(pairs.ToArray());
+            button_Stop.Enabled = false;
         }
 
         private async void button_GetData_Click(object sender, EventArgs e)
         {
+            if (string.IsNullOrEmpty(selectedPair))
+            {
+                MessageBox.Show("Пожалуйста, выберите пару из списка.", "Предупреждение", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return; 
+            }
             if (stopDataFetching)
             {
-                stopDataFetching = false; 
                 button_Stop.Enabled = true; 
+                button_GetData.Enabled = false;
+                stopDataFetching = false;
+            }
+            
+            else
+            {
+                button_Stop.Enabled = true;
+                button_GetData.Enabled = false;
             }
 
-           ClearTradeDataLists();
+            ClearTradeDataLists();
 
-           await GetDataFromAllApi();
+            await GetDataFromAllApi();
         }
         private async Task GetDataFromAllApi()
         {
@@ -68,9 +81,7 @@ namespace Infrastructure
         }
         private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-
             selectedPair = comboBox.Text;
-
         }
         private async Task GetDataFromBinance()
         {
@@ -148,12 +159,18 @@ namespace Infrastructure
 
         private async void button_Stop_Click(object sender, EventArgs e)
         {
-            stopDataFetching = true;
+           stopDataFetching = true;
+           
+           await kucoinCoins.StopData();
+           await bitgetCoins.StopData();
+           await bybitCoins.StopData();
+           await binanceCoins.StopData();
 
-            await kucoinCoins.StopData();
-            await bitgetCoins.StopData();
-            await bybitCoins.StopData();
-            await binanceCoins.StopData();
+           button_GetData.Enabled = true;
+
+           button_Stop.Enabled = false;
+            
+           
         }
 
     }

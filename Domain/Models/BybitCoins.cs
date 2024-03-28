@@ -8,7 +8,7 @@ using Domain.Abstractions;
 
 namespace Domain.Models
 {
-    public class BybitCoins : Coin, IRepository
+    public class BybitCoins :  IRepository
     {
         public event Action<string, DateTime, decimal> DataReceivedBybit;
         private BybitSocketClient bybitSocketClient;
